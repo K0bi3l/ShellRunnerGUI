@@ -9,10 +9,10 @@ namespace Jetbrains_1
         readonly Process cmd;
         readonly OutputTextboxWriter outputTextboxWriter;
         readonly InputCleaner inputCleaner;
-
-        CommandsQueue commandsQueue;
-        int commandsQueueMaxCapacity = 20; //capacity to choose, so it is hardcoded
-        int commandsQueueIndex;
+        readonly InputProcesser inputProcesser;
+       
+        CommandsQueueManager commandsQueueManager;
+        int commandsQueueMaxCapacity = 20; //capacity to choose, so it is hardcoded       
 
         string currentDirectory;
         public Form1()
@@ -60,7 +60,9 @@ namespace Jetbrains_1
 
             outputTextboxWriter = new OutputTextboxWriter(OutputTextBox);
             inputCleaner = new InputCleaner(InputTextBox);
+            inputProcesser = new InputProcesser(cmd.StandardInput);
             commandsQueue = new CommandsQueue(commandsQueueMaxCapacity);
+            commandsQueueManager = new CommandsQueueManager(commandsQueueMaxCapacity);
             commandsQueueIndex = -1;
 
         }
@@ -88,16 +90,13 @@ namespace Jetbrains_1
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                string input = InputTextBox.Text.Split(">")[1];
-                commandsQueue.Enqueue(input);
-                if (commandsQueue.Count > commandsQueueMaxCapacity) commandsQueue.Dequeue();
-                commandsQueueIndex = -1;
-                InputProcesser inputProcesser = new InputProcesser(cmd.StandardInput);
-                outputTextboxWriter.WriteToTextbox(input, Color.Orange);
+                string input = InputTextBox.Text.Split(">")[1];               
+                commandsQueueManager.AddCommand(input);
+               
+                outputTextboxWriter.WriteToTextbox("Command: " + input, Color.Orange);
                 if (cmd != null && !cmd.HasExited)
                 {
-                    inputProcesser.ProcessInput(input);
-                    //inputCleaner.CleanInput(WelcomeText);
+                    inputProcesser.ProcessInput(input);                    
                 }
                 e.Handled = true;
             }
@@ -116,32 +115,27 @@ namespace Jetbrains_1
         private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyValue == (char)Keys.Up)
-            {
-                if (commandsQueue.Count - 1 == commandsQueueIndex) return;
-                string command = commandsQueue.ElementAt(++commandsQueueIndex);
+            {                
+                string command = commandsQueueManager.GetNextCommand();
                 inputCleaner.ChangeCommand(command, currentDirectory);
             }
             else if (e.KeyValue == (char)Keys.Down)
-            {
-                int index = commandsQueueIndex - 1;
-                if (index <= -1)
+            {                
+                string command = commandsQueueManager.GetPreviousCommand();
+                if (command == null)
                 {
-                    commandsQueueIndex = -1;
                     inputCleaner.CleanInput(currentDirectory);
                     return;
                 }
-                string command = commandsQueue.ElementAt(--commandsQueueIndex);
                 inputCleaner.ChangeCommand(command, currentDirectory);
             }
             else if (e.KeyValue == (char)Keys.Left || e.KeyValue == (char)Keys.Back)
             {
-                if (InputTextBox.SelectionStart < currentDirectory.Length + 1)
+                if (InputTextBox.SelectionStart <= currentDirectory.Length)
                 {
                     e.SuppressKeyPress = true;
                 }
-            }
+            }          
         }
-
-
     }
 }

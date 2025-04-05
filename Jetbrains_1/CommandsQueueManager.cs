@@ -11,9 +11,20 @@ namespace Jetbrains_1
         
         CommandsQueue commandsQueue;
         int commandsQueueIndex;
-        public CommandsQueueManager() 
+        int commandsQueueMaxCapacity;
+
+        public CommandsQueueManager(int capacity)
         {
-            commandsQueue = new CommandsQueue();
+            commandsQueueMaxCapacity = capacity;
+            commandsQueue = new CommandsQueue(capacity);
+            commandsQueueIndex = -1;
+            
+        }        
+
+        public void AddCommand(string command)
+        {
+            commandsQueue.Enqueue(command);
+            if (commandsQueue.Count > commandsQueueMaxCapacity) commandsQueue.Dequeue();
             commandsQueueIndex = -1;
         }
 
@@ -30,15 +41,13 @@ namespace Jetbrains_1
             if (index <= -1)
             {
                 commandsQueueIndex = -1;
-                return null;
-                //inputCleaner.CleanInput(currentDirectory);
+                return null;               
             }
             else
             {
                 string command = commandsQueue.ElementAt(--commandsQueueIndex);
                 return command;
-            }
-            //inputCleaner.ChangeCommand(command, currentDirectory);
+            }            
         }
     }
 }
