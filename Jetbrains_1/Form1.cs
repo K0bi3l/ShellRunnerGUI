@@ -7,21 +7,16 @@ namespace Jetbrains_1
     public partial class Form1 : Form
     {
         readonly Process cmd;
-        readonly OutputTextboxWriter outputTextboxWriter;
+        readonly OutputWriter outputTextboxWriter;
         readonly InputWindowManager inputWindowManager;
         readonly InputProcesser inputProcesser;
         readonly HistoryNavigationHandler historyNavigationHandler;
-        readonly CommandsQueueManager commandsQueueManager;
-        readonly OutputColorManager outputColorManager;
-
-
+        readonly CommandsQueueManager commandsQueueManager;        
         int commandsQueueMaxCapacity; 
         string currentDirectory;
         public Form1()
         {
-            InitializeComponent();
-
-            outputColorManager = new OutputColorManager();
+            InitializeComponent();            
 
             var startCmd = new ProcessStartInfo
             {
@@ -43,7 +38,7 @@ namespace Jetbrains_1
             {
                 if (e.Data != null)
                 {
-                    Append(e.Data, outputColorManager.GetColor(OutputType.Output));
+                    Append(e.Data, OutputType.Output);
                 }
             };
 
@@ -51,7 +46,7 @@ namespace Jetbrains_1
             {
                 if (e.Data != null)
                 {
-                    Append(e.Data, outputColorManager.GetColor(OutputType.Error));
+                    Append(e.Data, OutputType.Error);
                 }
             };
             cmd.BeginOutputReadLine();
@@ -61,7 +56,7 @@ namespace Jetbrains_1
             commandsQueueMaxCapacity = 20;
             memoryCapacityControl.Value = commandsQueueMaxCapacity;
 
-            outputTextboxWriter = new OutputTextboxWriter(outputTextBox);
+            outputTextboxWriter = new OutputWriter(outputTextBox);
             inputWindowManager = new InputWindowManager(inputTextBox);
             inputProcesser = new InputProcesser(cmd.StandardInput);
             commandsQueueManager = new CommandsQueueManager(commandsQueueMaxCapacity);
@@ -84,17 +79,17 @@ namespace Jetbrains_1
             return false;
         }
 
-        private void Append(string text, Color color)
+        private void Append(string text, OutputType type)
         {
             if (outputTextBox.InvokeRequired)
             {
                 if(TryUpdateDirectory(text)) return;
 
-                outputTextBox.Invoke(new Action(() => outputTextboxWriter.WriteToTextbox(text, color)));
+                outputTextBox.Invoke(new Action(() => outputTextboxWriter.WriteToTextbox(text, type)));
                 return;
             }
             if (TryUpdateDirectory(text)) return;
-            outputTextboxWriter.WriteToTextbox(text, color);
+            outputTextboxWriter.WriteToTextbox(text, type);
         }
 
 
@@ -105,7 +100,7 @@ namespace Jetbrains_1
                 string input = inputTextBox.Text.Split(">")[1];
                 commandsQueueManager.AddCommand(input);
 
-                outputTextboxWriter.WriteToTextbox("Command: " + input, outputColorManager.GetColor(OutputType.Input));
+                outputTextboxWriter.WriteToTextbox("Command: " + input, OutputType.Input);
                 if (cmd != null && !cmd.HasExited)
                 {
                     inputProcesser.ProcessInput(input);

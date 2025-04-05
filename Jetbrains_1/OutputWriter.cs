@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-
-namespace Jetbrains_1
+﻿namespace Jetbrains_1
 {
-    public class OutputTextboxWriter
+    public class OutputWriter
     {
         RichTextBox outputTextbox;
-        public OutputTextboxWriter(RichTextBox outputTextbox) 
+        OutputColorManager outputColorManager;
+        public OutputWriter(RichTextBox outputTextbox) 
         {
             this.outputTextbox = outputTextbox;
+            outputColorManager = new OutputColorManager();
         }
 
-        public void WriteToTextbox(string text, Color color)
+        public void WriteToTextbox(string? text, OutputType type)
         {
+            var color = outputColorManager.GetColor(type);
             outputTextbox.SelectionColor = color;       
-            
-            // should change the second condition, but it is correct because only input has the orange color 
-            if (!string.IsNullOrEmpty(text) && !(color == Color.Orange)) text += Environment.NewLine;
+                    
+            if (!string.IsNullOrEmpty(text) && !(type == OutputType.Input)) text += Environment.NewLine;
             outputTextbox.AppendText(text);
             outputTextbox.ScrollToCaret();
+            var col = outputTextbox.SelectionColor;
         }
     }
 }
