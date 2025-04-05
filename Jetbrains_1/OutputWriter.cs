@@ -17,8 +17,7 @@
                     
             if (!string.IsNullOrEmpty(text) && !(type == OutputType.Input)) text += Environment.NewLine;
             outputTextbox.AppendText(text);
-            outputTextbox.ScrollToCaret();
-            var col = outputTextbox.SelectionColor;
+            outputTextbox.ScrollToCaret();            
         }
     }
 }
