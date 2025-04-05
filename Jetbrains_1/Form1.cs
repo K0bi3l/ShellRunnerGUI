@@ -10,12 +10,11 @@ namespace Jetbrains_1
         readonly OutputTextboxWriter outputTextboxWriter;
         readonly InputCleaner inputCleaner;
 
-        Queue<string> inputQueue;
-        int inputQueueMaxCapacity = 20; //capacity to choose, so it is hardcoded
-        int inputQueuePointer;
+        CommandsQueue commandsQueue;
+        int commandsQueueMaxCapacity = 20; //capacity to choose, so it is hardcoded
+        int commandsQueueIndex;
 
         string currentDirectory;
-        string input { get; set; }
         public Form1()
         {
             InitializeComponent();
@@ -36,10 +35,6 @@ namespace Jetbrains_1
                 EnableRaisingEvents = true,
             };
             cmd.Start();
-            outputTextboxWriter = new OutputTextboxWriter(OutputTextBox);
-            inputCleaner = new InputCleaner(InputTextBox);
-            inputQueue = new Queue<string>();
-            inputQueuePointer = 0;
 
             cmd.OutputDataReceived += (sender, e) =>
             {
@@ -62,6 +57,11 @@ namespace Jetbrains_1
             InputTextBox.Focus();
             currentDirectory = Environment.CurrentDirectory + ">";
             InputTextBox.Text = currentDirectory;
+
+            outputTextboxWriter = new OutputTextboxWriter(OutputTextBox);
+            inputCleaner = new InputCleaner(InputTextBox);
+            commandsQueue = new CommandsQueue(commandsQueueMaxCapacity);
+            commandsQueueIndex = -1;
 
         }
 
@@ -88,10 +88,10 @@ namespace Jetbrains_1
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                input = InputTextBox.Text.Split(">")[1];
-                inputQueue.Enqueue(input);
-                if (inputQueue.Count > inputQueueMaxCapacity) inputQueue.Dequeue();
-                inputQueuePointer = 0;
+                string input = InputTextBox.Text.Split(">")[1];
+                commandsQueue.Enqueue(input);
+                if (commandsQueue.Count > commandsQueueMaxCapacity) commandsQueue.Dequeue();
+                commandsQueueIndex = -1;
                 InputProcesser inputProcesser = new InputProcesser(cmd.StandardInput);
                 outputTextboxWriter.WriteToTextbox(input, Color.Orange);
                 if (cmd != null && !cmd.HasExited)
@@ -101,7 +101,6 @@ namespace Jetbrains_1
                 }
                 e.Handled = true;
             }
-            
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -114,25 +113,35 @@ namespace Jetbrains_1
             base.OnFormClosing(e);
         }
 
-        private void InputTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-           if (e.KeyValue == (char)Keys.Up)
+            if (e.KeyValue == (char)Keys.Up)
             {
-                if (inputQueue.Count <= inputQueuePointer) return;
-                string command = inputQueue.ElementAt(inputQueuePointer++);
+                if (commandsQueue.Count - 1 == commandsQueueIndex) return;
+                string command = commandsQueue.ElementAt(++commandsQueueIndex);
                 inputCleaner.ChangeCommand(command, currentDirectory);
             }
             else if (e.KeyValue == (char)Keys.Down)
             {
-                if (inputQueuePointer == 0) return;
-                string command = inputQueue.ElementAt(--inputQueuePointer);
+                int index = commandsQueueIndex - 1;
+                if (index <= -1)
+                {
+                    commandsQueueIndex = -1;
+                    inputCleaner.CleanInput(currentDirectory);
+                    return;
+                }
+                string command = commandsQueue.ElementAt(--commandsQueueIndex);
                 inputCleaner.ChangeCommand(command, currentDirectory);
             }
+            else if (e.KeyValue == (char)Keys.Left || e.KeyValue == (char)Keys.Back)
+            {
+                if (InputTextBox.SelectionStart < currentDirectory.Length + 1)
+                {
+                    e.SuppressKeyPress = true;
+                }
+            }
         }
+
+
     }
 }
