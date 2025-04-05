@@ -8,16 +8,20 @@ namespace Jetbrains_1
     {
         readonly Process cmd;
         readonly OutputTextboxWriter outputTextboxWriter;
-        readonly InputCleaner inputCleaner;
+        readonly InputWindowManager inputWindowManager;
         readonly InputProcesser inputProcesser;
-       
-        CommandsQueueManager commandsQueueManager;
-        int commandsQueueMaxCapacity = 20; //capacity to choose, so it is hardcoded       
+        readonly HistoryNavigationHandler historyNavigationHandler;
+        readonly CommandsQueueManager commandsQueueManager;
+        readonly OutputColorManager outputColorManager;
 
+
+        int commandsQueueMaxCapacity; 
         string currentDirectory;
         public Form1()
         {
             InitializeComponent();
+
+            outputColorManager = new OutputColorManager();
 
             var startCmd = new ProcessStartInfo
             {
@@ -35,12 +39,11 @@ namespace Jetbrains_1
                 EnableRaisingEvents = true,
             };
             cmd.Start();
-
             cmd.OutputDataReceived += (sender, e) =>
             {
                 if (e.Data != null)
                 {
-                    Append(e.Data, Color.White);
+                    Append(e.Data, outputColorManager.GetColor(OutputType.Output));
                 }
             };
 
@@ -48,40 +51,49 @@ namespace Jetbrains_1
             {
                 if (e.Data != null)
                 {
-                    Append(e.Data, Color.Red);
+                    Append(e.Data, outputColorManager.GetColor(OutputType.Error));
                 }
             };
-
             cmd.BeginOutputReadLine();
             cmd.BeginErrorReadLine();
-            InputTextBox.Focus();
-            currentDirectory = Environment.CurrentDirectory + ">";
-            InputTextBox.Text = currentDirectory;
 
-            outputTextboxWriter = new OutputTextboxWriter(OutputTextBox);
-            inputCleaner = new InputCleaner(InputTextBox);
+            //sample value to initiate the queue capacity, not to small not to big to avoid multiple capacity increasing and not to allocate too much memory at start
+            commandsQueueMaxCapacity = 20;
+            memoryCapacityControl.Value = commandsQueueMaxCapacity;
+
+            outputTextboxWriter = new OutputTextboxWriter(outputTextBox);
+            inputWindowManager = new InputWindowManager(inputTextBox);
             inputProcesser = new InputProcesser(cmd.StandardInput);
-            commandsQueue = new CommandsQueue(commandsQueueMaxCapacity);
             commandsQueueManager = new CommandsQueueManager(commandsQueueMaxCapacity);
-            commandsQueueIndex = -1;
+            historyNavigationHandler = new HistoryNavigationHandler(commandsQueueManager, inputWindowManager);
 
+            inputTextBox.Focus();
+            currentDirectory = Environment.CurrentDirectory + "> ";
+            inputTextBox.Text = currentDirectory;
+
+        }        
+
+        private bool TryUpdateDirectory(string text)
+        {
+            if (text.StartsWith("PS"))
+            {
+                currentDirectory = text[3..];
+                inputTextBox.Invoke(new Action(() => inputWindowManager.CleanInput(currentDirectory)));
+                return true;
+            }
+            return false;
         }
 
         private void Append(string text, Color color)
         {
-            if (OutputTextBox.InvokeRequired)
+            if (outputTextBox.InvokeRequired)
             {
-                //wynieœæ do innej metody
-                if (text.StartsWith("PS"))
-                {
-                    currentDirectory = text[3..];
-                    InputTextBox.Invoke(new Action(() => inputCleaner.CleanInput(currentDirectory)));
-                    return;
-                }
+                if(TryUpdateDirectory(text)) return;
 
-                OutputTextBox.Invoke(new Action(() => outputTextboxWriter.WriteToTextbox(text, color)));
+                outputTextBox.Invoke(new Action(() => outputTextboxWriter.WriteToTextbox(text, color)));
                 return;
             }
+            if (TryUpdateDirectory(text)) return;
             outputTextboxWriter.WriteToTextbox(text, color);
         }
 
@@ -90,16 +102,44 @@ namespace Jetbrains_1
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                string input = InputTextBox.Text.Split(">")[1];               
+                string input = inputTextBox.Text.Split(">")[1];
                 commandsQueueManager.AddCommand(input);
-               
-                outputTextboxWriter.WriteToTextbox("Command: " + input, Color.Orange);
+
+                outputTextboxWriter.WriteToTextbox("Command: " + input, outputColorManager.GetColor(OutputType.Input));
                 if (cmd != null && !cmd.HasExited)
                 {
-                    inputProcesser.ProcessInput(input);                    
+                    inputProcesser.ProcessInput(input);
                 }
                 e.Handled = true;
             }
+        }
+        
+        private void BlockDirectoryDeleting(KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete || e.KeyCode == Keys.Back)
+            {
+                if (inputTextBox.SelectionStart <= currentDirectory.Length)
+                {
+                    e.SuppressKeyPress = true;
+                }
+            }
+        }
+
+        private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
+        {           
+            if (historyNavigationHandler.HandleHistoryNavigation(e,currentDirectory)) return;
+            BlockDirectoryDeleting(e);
+        }
+       
+        private void commandsMemoryButton_Click(object sender, EventArgs e)
+        {
+            commandsQueueManager.QueueMaxCapacity = (int)memoryCapacityControl.Value;
+        }
+
+        private void memoryCapacityControl_ValueChanged(object sender, EventArgs e)
+        {
+            if (memoryCapacityControl.Value < 1) memoryCapacityControl.Value = 1;
+            if (memoryCapacityControl.Value > 9999) memoryCapacityControl.Value = 9999;
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -110,32 +150,6 @@ namespace Jetbrains_1
                 cmd.Dispose();
             }
             base.OnFormClosing(e);
-        }
-
-        private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyValue == (char)Keys.Up)
-            {                
-                string command = commandsQueueManager.GetNextCommand();
-                inputCleaner.ChangeCommand(command, currentDirectory);
-            }
-            else if (e.KeyValue == (char)Keys.Down)
-            {                
-                string command = commandsQueueManager.GetPreviousCommand();
-                if (command == null)
-                {
-                    inputCleaner.CleanInput(currentDirectory);
-                    return;
-                }
-                inputCleaner.ChangeCommand(command, currentDirectory);
-            }
-            else if (e.KeyValue == (char)Keys.Left || e.KeyValue == (char)Keys.Back)
-            {
-                if (InputTextBox.SelectionStart <= currentDirectory.Length)
-                {
-                    e.SuppressKeyPress = true;
-                }
-            }          
         }
     }
 }

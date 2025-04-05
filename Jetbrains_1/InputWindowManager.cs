@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Jetbrains_1
 {
-    public class InputCleaner
+    public class InputWindowManager
     {
         private readonly RichTextBox inputTextBox;
        
-        public InputCleaner(RichTextBox inputTextBox)
+        public InputWindowManager(RichTextBox inputTextBox)
         {
             this.inputTextBox = inputTextBox;            
         }
@@ -22,10 +22,10 @@ namespace Jetbrains_1
             inputTextBox.SelectionStart = inputTextBox.Text.Length;
         }
 
-        public void ChangeCommand(string command,string welcomeText)
+        public void ChangeCommand(string command,string currentDirectory)
         {
-            CleanInput(welcomeText);
-            inputTextBox.AppendText(command);
+            CleanInput(currentDirectory);
+            inputTextBox.AppendText(command.TrimEnd('\n'));
         }
 
     }

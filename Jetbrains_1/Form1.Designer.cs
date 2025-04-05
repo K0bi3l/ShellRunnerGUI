@@ -28,104 +28,133 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            OutputTextBox = new RichTextBox();
-            OutputLabel = new Label();
-            InputTextBox = new RichTextBox();
-            InputLabel = new Label();
-            MenuStrip = new ContextMenuStrip(components);
-            oToolStripMenuItem = new ToolStripMenuItem();
-            commandsMemorySizeToolStripMenuItem = new ToolStripMenuItem();
-            MenuStrip.SuspendLayout();
+            outputTextBox = new RichTextBox();
+            outputLabel = new Label();
+            inputTextBox = new RichTextBox();
+            inputLabel = new Label();
+            commandsMemoryLabel = new Label();
+            commandsMemoryButton = new Button();
+            setCapacityGroupBox = new GroupBox();
+            memoryCapacityControl = new NumericUpDown();
+            setCapacityGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)memoryCapacityControl).BeginInit();
             SuspendLayout();
             // 
-            // OutputTextBox
+            // outputTextBox
             // 
-            OutputTextBox.BackColor = SystemColors.MenuText;
-            OutputTextBox.ForeColor = SystemColors.Control;
-            OutputTextBox.Location = new Point(105, 649);
-            OutputTextBox.Name = "OutputTextBox";
-            OutputTextBox.ReadOnly = true;
-            OutputTextBox.Size = new Size(1316, 290);
-            OutputTextBox.TabIndex = 1;
-            OutputTextBox.Text = "";
+            outputTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            outputTextBox.BackColor = SystemColors.MenuText;
+            outputTextBox.ForeColor = SystemColors.Control;
+            outputTextBox.Location = new Point(105, 604);
+            outputTextBox.Name = "outputTextBox";
+            outputTextBox.ReadOnly = true;
+            outputTextBox.Size = new Size(1316, 290);
+            outputTextBox.TabIndex = 1;
+            outputTextBox.Text = "";
             // 
-            // OutputLabel
+            // outputLabel
             // 
-            OutputLabel.AutoSize = true;
-            OutputLabel.Location = new Point(105, 608);
-            OutputLabel.Name = "OutputLabel";
-            OutputLabel.Size = new Size(73, 25);
-            OutputLabel.TabIndex = 2;
-            OutputLabel.Text = "Output:";
+            outputLabel.AutoSize = true;
+            outputLabel.Location = new Point(105, 559);
+            outputLabel.Name = "outputLabel";
+            outputLabel.Size = new Size(73, 25);
+            outputLabel.TabIndex = 2;
+            outputLabel.Text = "Output:";
             // 
-            // InputTextBox
+            // inputTextBox
             // 
-            InputTextBox.BackColor = SystemColors.MenuText;
-            InputTextBox.ForeColor = SystemColors.Control;
-            InputTextBox.Location = new Point(105, 111);
-            InputTextBox.Name = "InputTextBox";
-            InputTextBox.ScrollBars = RichTextBoxScrollBars.ForcedHorizontal;
-            InputTextBox.Size = new Size(1316, 275);
-            InputTextBox.TabIndex = 3;
-            InputTextBox.Text = "";
-            InputTextBox.KeyDown += InputTextBox_KeyDown;
-            InputTextBox.KeyPress += InputTextBox_KeyPress;
+            inputTextBox.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            inputTextBox.BackColor = SystemColors.MenuText;
+            inputTextBox.ForeColor = SystemColors.Control;
+            inputTextBox.Location = new Point(105, 201);
+            inputTextBox.Name = "inputTextBox";
+            inputTextBox.ScrollBars = RichTextBoxScrollBars.ForcedHorizontal;
+            inputTextBox.Size = new Size(1316, 275);
+            inputTextBox.TabIndex = 3;
+            inputTextBox.Text = "";
+            inputTextBox.KeyDown += InputTextBox_KeyDown;
+            inputTextBox.KeyPress += InputTextBox_KeyPress;
             // 
-            // InputLabel
+            // inputLabel
             // 
-            InputLabel.AutoSize = true;
-            InputLabel.Location = new Point(105, 72);
-            InputLabel.Name = "InputLabel";
-            InputLabel.Size = new Size(58, 25);
-            InputLabel.TabIndex = 4;
-            InputLabel.Text = "Input:";
+            inputLabel.AutoSize = true;
+            inputLabel.Location = new Point(105, 151);
+            inputLabel.Name = "inputLabel";
+            inputLabel.Size = new Size(58, 25);
+            inputLabel.TabIndex = 4;
+            inputLabel.Text = "Input:";
             // 
-            // MenuStrip
+            // commandsMemoryLabel
             // 
-            MenuStrip.ImageScalingSize = new Size(24, 24);
-            MenuStrip.Items.AddRange(new ToolStripItem[] { oToolStripMenuItem });
-            MenuStrip.Name = "MenuStrip";
-            MenuStrip.Size = new Size(149, 36);
+            commandsMemoryLabel.AutoSize = true;
+            commandsMemoryLabel.Location = new Point(25, 37);
+            commandsMemoryLabel.Name = "commandsMemoryLabel";
+            commandsMemoryLabel.Size = new Size(252, 25);
+            commandsMemoryLabel.TabIndex = 5;
+            commandsMemoryLabel.Text = "Commands Memory Capacity:";
             // 
-            // oToolStripMenuItem
+            // commandsMemoryButton
             // 
-            oToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { commandsMemorySizeToolStripMenuItem });
-            oToolStripMenuItem.Name = "oToolStripMenuItem";
-            oToolStripMenuItem.Size = new Size(148, 32);
-            oToolStripMenuItem.Text = "Options";
+            commandsMemoryButton.Location = new Point(64, 111);
+            commandsMemoryButton.Name = "commandsMemoryButton";
+            commandsMemoryButton.Size = new Size(179, 34);
+            commandsMemoryButton.TabIndex = 7;
+            commandsMemoryButton.Text = "Set new capacity";
+            commandsMemoryButton.UseVisualStyleBackColor = true;
+            commandsMemoryButton.Click += commandsMemoryButton_Click;
             // 
-            // commandsMemorySizeToolStripMenuItem
+            // setCapacityGroupBox
             // 
-            commandsMemorySizeToolStripMenuItem.Name = "commandsMemorySizeToolStripMenuItem";
-            commandsMemorySizeToolStripMenuItem.Size = new Size(312, 34);
-            commandsMemorySizeToolStripMenuItem.Text = "Commands Memory size";
+            setCapacityGroupBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            setCapacityGroupBox.Controls.Add(memoryCapacityControl);
+            setCapacityGroupBox.Controls.Add(commandsMemoryLabel);
+            setCapacityGroupBox.Controls.Add(commandsMemoryButton);
+            setCapacityGroupBox.Location = new Point(1266, 12);
+            setCapacityGroupBox.MaximumSize = new Size(300, 167);
+            setCapacityGroupBox.MinimumSize = new Size(300, 167);
+            setCapacityGroupBox.Name = "setCapacityGroupBox";
+            setCapacityGroupBox.Size = new Size(300, 167);
+            setCapacityGroupBox.TabIndex = 8;
+            setCapacityGroupBox.TabStop = false;
+            // 
+            // memoryCapacityControl
+            // 
+            memoryCapacityControl.Location = new Point(63, 74);
+            memoryCapacityControl.Name = "memoryCapacityControl";
+            memoryCapacityControl.Size = new Size(180, 31);
+            memoryCapacityControl.TabIndex = 9;
+            memoryCapacityControl.ValueChanged += memoryCapacityControl_ValueChanged;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1578, 1144);
-            Controls.Add(InputLabel);
-            Controls.Add(InputTextBox);
-            Controls.Add(OutputLabel);
-            Controls.Add(OutputTextBox);
-            MinimumSize = new Size(800, 500);
+            Controls.Add(setCapacityGroupBox);
+            Controls.Add(inputLabel);
+            Controls.Add(inputTextBox);
+            Controls.Add(outputLabel);
+            Controls.Add(outputTextBox);
+            MaximumSize = new Size(3200, 2400);
+            MinimumSize = new Size(1600, 1200);
             Name = "Form1";
             Text = "ShellRunner";
-            MenuStrip.ResumeLayout(false);
+            setCapacityGroupBox.ResumeLayout(false);
+            setCapacityGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)memoryCapacityControl).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private RichTextBox OutputTextBox;
-        private Label OutputLabel;
-        private RichTextBox InputTextBox;
-        private Label InputLabel;
-        private ToolStripMenuItem oToolStripMenuItem;
-        private ToolStripMenuItem commandsMemorySizeToolStripMenuItem;
-        public ContextMenuStrip MenuStrip;
+        private RichTextBox outputTextBox;
+        private Label outputLabel;
+        private RichTextBox inputTextBox;
+        private Label inputLabel;
+        private Label commandsMemoryLabel;
+        private Button commandsMemoryButton;
+        private GroupBox setCapacityGroupBox;
+        private NumericUpDown memoryCapacityControl;
     }
 }
