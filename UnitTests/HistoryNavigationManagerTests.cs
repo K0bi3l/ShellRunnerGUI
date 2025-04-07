@@ -1,4 +1,4 @@
-﻿using Jetbrains_1;
+﻿using ShellRunnerGUI;
 using System.Windows.Forms;
 
 namespace UnitTests

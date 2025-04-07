@@ -1,4 +1,4 @@
-namespace Jetbrains_1
+namespace ShellRunnerGUI
 {
     internal static class Program
     {

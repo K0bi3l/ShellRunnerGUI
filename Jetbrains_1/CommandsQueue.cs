@@ -1,4 +1,4 @@
-﻿namespace Jetbrains_1
+﻿namespace ShellRunnerGUI
 {
     public class CommandsQueue
     {

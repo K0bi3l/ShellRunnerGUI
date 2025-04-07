@@ -2,7 +2,7 @@ using System.ComponentModel.Design.Serialization;
 using System.Diagnostics;
 using System.Text;
 
-namespace Jetbrains_1
+namespace ShellRunnerGUI
 {
     public partial class Form1 : Form
     {
