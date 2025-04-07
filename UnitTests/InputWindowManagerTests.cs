@@ -16,7 +16,7 @@ namespace UnitTests
 
         // Test clean input method
         [Fact]
-        public void Test1()
+        public void TestCleanInput()
         {
             string welcomeText = "Welcome";
             inputTextBox.Text = "test";
@@ -27,7 +27,7 @@ namespace UnitTests
 
         // Test change command method
         [Fact]
-        public void Test2()
+        public void TestChangeCommand()
         {
             inputTextBox.Text = "test";
             string command = "echo Hello";

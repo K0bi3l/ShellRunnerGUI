@@ -6,7 +6,7 @@ namespace UnitTests
     {
         // Test max capacity setting
         [Fact]
-        public void Test1()
+        public void TestMaxCapacity()
         {
             var maxCapacity = 1;
             var commandsQueueManager = new CommandsQueueManager(maxCapacity);
@@ -15,7 +15,7 @@ namespace UnitTests
 
         // Test GetNext Command called once
         [Fact]
-        public void Test2()
+        public void TestGetNextOnce()
         {
             var maxCapacity = 1;
             var commandsQueueManager = new CommandsQueueManager(maxCapacity);
@@ -27,7 +27,7 @@ namespace UnitTests
 
         // Test GetNextCommand called multiple times
         [Fact]
-        public void Test3()
+        public void TestGetNextMultTimes()
         {
             var maxCapacity = 3;
             var commandsQueueManager = new CommandsQueueManager(maxCapacity);
@@ -41,7 +41,7 @@ namespace UnitTests
 
         // Test GetNextCommand called more times than queue capacity
         [Fact]
-        public void Test4()
+        public void TestGetNextMore()
         {
             var maxCapacity = 3;
             var commandsQueueManager = new CommandsQueueManager(maxCapacity);
@@ -55,7 +55,7 @@ namespace UnitTests
 
         // Test GetPreviousCommand called once
         [Fact]
-        public void Test5()
+        public void TestGetPrevOnce()
         {
             var maxCapacity = 3;
             var commandsQueueManager = new CommandsQueueManager(maxCapacity);
@@ -70,7 +70,7 @@ namespace UnitTests
 
         // Test GetPreviousCommand called multiple times
         [Fact]
-        public void Test6()
+        public void TestGetPrevMultTimes()
         {
             var maxCapacity = 3;
             var commandsQueueManager = new CommandsQueueManager(maxCapacity);
@@ -86,7 +86,7 @@ namespace UnitTests
 
         // Test GetPreviousCommand called more times than queue capacity
         [Fact]
-        public void Test7()
+        public void TestGetPrevMoreThanCapacity()
         {
             var maxCapacity = 3;
             var commandsQueueManager = new CommandsQueueManager(maxCapacity);
@@ -100,7 +100,7 @@ namespace UnitTests
 
         // Test GetPreviousCommand called when queue is empty
         [Fact]
-        public void Test8()
+        public void TestGetPrevEmptyQueue()
         {
             var maxCapacity = 3;
             var commandsQueueManager = new CommandsQueueManager(maxCapacity);       
@@ -110,7 +110,7 @@ namespace UnitTests
 
         // Test GetNextCommand called when queue is empty
         [Fact]
-        public void Test9()
+        public void TestGetNextEmptyQueue()
         {
             var maxCapacity = 3;
             var commandsQueueManager = new CommandsQueueManager(maxCapacity);
@@ -120,7 +120,7 @@ namespace UnitTests
 
         // Test GetNextCommand called when queue is empty and then AddCommand
         [Fact]
-        public void Test10()
+        public void TestGetNextThenAddCommand()
         {
             var maxCapacity = 3;
             var commandsQueueManager = new CommandsQueueManager(maxCapacity);
@@ -134,7 +134,7 @@ namespace UnitTests
 
         // Test mixed GetNextCommand and GetPreviousCommand
         [Fact]
-        public void Test11()
+        public void TestGetNextAndGetPrevMultTimes()
         {
             var maxCapacity = 5;
             var commandsQueueManager = new CommandsQueueManager(maxCapacity);

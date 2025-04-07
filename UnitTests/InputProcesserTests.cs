@@ -17,7 +17,7 @@ namespace UnitTests
 
         // Test process input method
         [Fact]
-        public void Test1()
+        public void TestProcessInput()
         {
             string input = "input";
             inputProcesser.ProcessInput(input);            

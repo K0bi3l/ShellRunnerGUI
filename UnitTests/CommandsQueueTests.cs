@@ -6,7 +6,7 @@ namespace UnitTests
     {
         // Test enqueueuing one element
         [Fact]
-        public void Test1()
+        public void TestEnqueuingOneElement()
         {
             var commandsQueue = new CommandsQueue();
             commandsQueue.Enqueue("element1");            
@@ -16,7 +16,7 @@ namespace UnitTests
 
         // Test enqueueuing multiple elements
         [Fact]
-        public void Test2()
+        public void TestEnqueueingMulElems()
         {
             var commandsQueue = new CommandsQueue();
             commandsQueue.Enqueue("element1");
@@ -27,7 +27,7 @@ namespace UnitTests
 
         // Test dequeueuing 
         [Fact]
-        public void Test3()
+        public void TestDequeueing()
         {
             var commandsQueue = new CommandsQueue();
             commandsQueue.Enqueue("element1");
@@ -38,7 +38,7 @@ namespace UnitTests
 
         // Test correctness of the elementAt method
         [Fact]
-        public void Test4()
+        public void TestElementAt()
         {
             var commandsQueue = new CommandsQueue();
             commandsQueue.Enqueue("element1");

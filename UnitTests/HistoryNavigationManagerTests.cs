@@ -25,7 +25,7 @@ namespace UnitTests
 
         // Test wrong key
         [Fact]
-        public void Test1()
+        public void TestWrongKey()
         {
             var keyEventArgs = new KeyEventArgs(Keys.W);
 
@@ -35,7 +35,7 @@ namespace UnitTests
 
         // Test up key called once
         [Fact]
-        public void Test2()
+        public void TestUpKey()
         {
             var keyEventArgs = new KeyEventArgs(Keys.Up);
             bool result = historyNavigationHandler.HandleHistoryNavigation(keyEventArgs, currentDirectory);
@@ -45,7 +45,7 @@ namespace UnitTests
 
         // Test up key called multiple times, but less than capacity
         [Fact]
-        public void Test3()
+        public void TestUpKeyMultTimes()
         {
             var keyEventArgs = new KeyEventArgs(Keys.Up);
             historyNavigationHandler.HandleHistoryNavigation(keyEventArgs, currentDirectory);
@@ -56,7 +56,7 @@ namespace UnitTests
 
         // Test up key called multiple times, but more than capacity
         [Fact]
-        public void Test4()
+        public void TestUpKeyMoreThanCapacity()
         {
             var keyEventArgs = new KeyEventArgs(Keys.Up);
             for (int i = 0; i < 10; i++)
@@ -68,7 +68,7 @@ namespace UnitTests
 
         // Test down key called once at start of the program
         [Fact]
-        public void Test5()
+        public void TestDownKeyOnce()
         {
             var keyEventArgs = new KeyEventArgs(Keys.Down);
             bool result = historyNavigationHandler.HandleHistoryNavigation(keyEventArgs, currentDirectory);               
@@ -78,7 +78,7 @@ namespace UnitTests
 
         // Test down key called once after up key
         [Fact]
-        public void Test6()
+        public void TestDownAfterUpKey()
         {
             var keyEventArgs = new KeyEventArgs(Keys.Up);
             historyNavigationHandler.HandleHistoryNavigation(keyEventArgs, currentDirectory);
@@ -91,7 +91,7 @@ namespace UnitTests
 
         // Test down key called multiple times
         [Fact]
-        public void Test7()
+        public void TestDownKeyMultTimes()
         {
             var keyEventArgs = new KeyEventArgs(Keys.Up);
             for (int i = 0; i < 10; i++)
@@ -108,7 +108,7 @@ namespace UnitTests
 
         // Test down key called multiple times, but less than capacity
         [Fact]
-        public void Test8()
+        public void TestDownKeyMoreThanCapacity()
         {
             var keyEventArgs = new KeyEventArgs(Keys.Up);
             for (int i = 0; i < 3; i++)
@@ -124,7 +124,7 @@ namespace UnitTests
 
         // Test both keys called multiple times
         [Fact]
-        public void Test9()
+        public void TestDownAndUpMultTimes()
         {
             var keyEventArgs = new KeyEventArgs(Keys.Up);
             for (int i = 0; i < 10; i++)

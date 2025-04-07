@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Jetbrains_1\Jetbrains_1.csproj" />
+    <ProjectReference Include="..\Jetbrains_1\ShellRunnerGUI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

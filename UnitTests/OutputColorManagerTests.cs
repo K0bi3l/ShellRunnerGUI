@@ -7,7 +7,7 @@ namespace UnitTests
     {
         // Test GetColor method
         [Fact]
-        public void Test1()
+        public void TestGetColor()
         {
             OutputColorManager outputColorManager = new OutputColorManager();
             Assert.Equal(Color.White, outputColorManager.GetColor(OutputType.Output));
