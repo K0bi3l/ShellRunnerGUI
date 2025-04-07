@@ -17,7 +17,7 @@ After downloading:
 
 ### Requirements
 - [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download) + Windows Desktop (should already be in SDK)
-- Windows OS (prefferably 10 or 11)
+- Windows OS (preferably 10 or 11)
 - Visual Studio **or** JetBrains Rider
 
 ### Instructions
