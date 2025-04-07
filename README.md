@@ -16,8 +16,9 @@ After downloading:
 ## 🛠️ How to run app from code
 
 ### Requirements
-- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download)
-- Visual Studio 2022 **lub** JetBrains Rider
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download) + Windows Desktop (should already be in SDK)
+- Windows OS (prefferably 10 or 11)
+- Visual Studio **or** JetBrains Rider
 
 ### Instructions
 1. Clone repo:
